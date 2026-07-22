@@ -13,7 +13,7 @@ export interface CurrentUser {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://gestion-immobiliere-backend.onrender.com';
+  private apiUrl = 'https://gestion-immobiliere-backend.onrender.com/api';
   private rememberFlagKey = 'rememberMe';
 
   constructor(private http: HttpClient) {}
@@ -34,7 +34,12 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/mot-de-passe-oublie`, { email });
   }
 
-  resetPassword(data: { token: string; email: string; password: string; password_confirmation: string }): Observable<any> {
+  resetPassword(data: {
+    token: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }): Observable<any> {
     return this.http.post(`${this.apiUrl}/reinitialiser-mot-de-passe`, data);
   }
 
