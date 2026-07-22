@@ -1,0 +1,114 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu">
+        <li (click)="navigateTo('/mes-biens')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 21h18" stroke-linecap="round"/>
+              <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Mes biens</span>
+        </li>
+        <li class="active" (click)="navigateTo('/rapport-financier')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 20V10M18 20V4M6 20v-4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Rapport financier</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Rapport financier</h1>
+          <p class="subtitle">Synthèse des revenus et dépenses de votre patrimoine</p>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (isLoading) {
+        <div class="loading">Calcul du rapport...</div>
+      } @else if (biens.length === 0) {
+        <div class="empty-state">
+          <p>Aucun bien associé à votre compte pour le moment.</p>
+        </div>
+      } @else {
+        <div class="summary-grid">
+          <div class="summary-card accent-green">
+            <span class="summary-label">Revenus perçus</span>
+            <span class="summary-value">{{ totalRevenus | number }} FCFA</span>
+          </div>
+          <div class="summary-card accent-gold">
+            <span class="summary-label">En attente / retard</span>
+            <span class="summary-value">{{ totalEnAttente | number }} FCFA</span>
+          </div>
+          <div class="summary-card accent-red">
+            <span class="summary-label">Dépenses (maintenance)</span>
+            <span class="summary-value">{{ totalDepenses | number }} FCFA</span>
+          </div>
+          <div class="summary-card accent-dark">
+            <span class="summary-label">Résultat net</span>
+            <span class="summary-value" [class.negative]="totalNet < 0">{{ totalNet | number }} FCFA</span>
+          </div>
+        </div>
+
+        <h2 class="section-heading">Détail par bien</h2>
+
+        <div class="bien-report-list">
+          @for (r of rapportParBien; track r.bien.id) {
+            <div class="bien-report-card">
+              <div class="bien-report-header">
+                <div>
+                  <h3>{{ r.bien.type }} — {{ r.bien.adresse }}</h3>
+                  <span class="badge" [class]="'badge-' + r.bien.statut">
+                    {{ statutLabel(r.bien.statut) }}
+                  </span>
+                </div>
+              </div>
+              <div class="bien-report-figures">
+                <div class="figure">
+                  <span class="figure-label">Revenus</span>
+                  <span class="figure-value positive">+{{ r.revenus | number }} FCFA</span>
+                  <span class="figure-note">{{ r.nbPaiements }} paiement(s) reçu(s)</span>
+                </div>
+                <div class="figure">
+                  <span class="figure-label">Dépenses</span>
+                  <span class="figure-value negative">-{{ r.depenses | number }} FCFA</span>
+                  <span class="figure-note">Maintenance</span>
+                </div>
+                <div class="figure figure-net">
+                  <span class="figure-label">Net</span>
+                  <span class="figure-value" [class.negative]="r.net < 0" [class.positive]="r.net >= 0">
+                    {{ r.net | number }} FCFA
+                  </span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

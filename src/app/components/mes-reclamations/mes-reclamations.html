@@ -1,0 +1,142 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu">
+        <li (click)="navigateTo('/mon-contrat')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke-linejoin="round"/>
+              <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mon contrat</span>
+        </li>
+        <li (click)="navigateTo('/mes-paiements')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+              <path d="M2 10h20" stroke-linecap="round"/>
+              <path d="M6 15h4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mes paiements</span>
+        </li>
+        <li class="active" (click)="navigateTo('/mes-reclamations')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+              <path d="M12 9v4" stroke-linecap="round"/>
+              <path d="M12 17h.01" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mes réclamations</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Mes réclamations</h1>
+          <p class="subtitle">Signalez un problème et suivez son traitement</p>
+        </div>
+        <button class="btn-primary" (click)="openAddModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
+          </svg>
+          Déclarer un incident
+        </button>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (isLoading) {
+        <div class="loading">Chargement...</div>
+      } @else if (reclamations.length === 0) {
+        <div class="empty-state">
+          <p>Vous n'avez signalé aucun incident pour le moment.</p>
+        </div>
+      } @else {
+        <div class="reclamations-list">
+          @for (r of reclamations; track r.id) {
+            <div class="reclamation-card">
+              <div class="reclamation-card-header">
+                <div>
+                  <span class="card-type">{{ typeLabel(r.type_incident) }}</span>
+                  <h3>{{ r.bien?.type }} — {{ r.bien?.adresse }}</h3>
+                </div>
+                <span class="badge" [class]="'badge-' + r.statut">
+                  {{ statutLabel(r.statut) }}
+                </span>
+              </div>
+              <p class="reclamation-description">{{ r.description }}</p>
+              <p class="reclamation-date">Déclarée le {{ r.date_declaration | date:'dd/MM/yyyy' }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal de déclaration -->
+@if (showModal) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h2>Déclarer un incident</h2>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      <div class="form-group">
+        <label>Bien concerné *</label>
+        <select [(ngModel)]="form.bien_id">
+          <option [ngValue]="null">-- Sélectionner un bien --</option>
+          @for (bien of biensOptions; track bien.id) {
+            <option [ngValue]="bien.id">{{ bien.type }} — {{ bien.adresse }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Type d'incident *</label>
+        <select [(ngModel)]="form.type_incident">
+          <option value="plomberie">Plomberie</option>
+          <option value="electricite">Électricité</option>
+          <option value="chauffage">Chauffage</option>
+          <option value="serrurerie">Serrurerie</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea [(ngModel)]="form.description" rows="4" placeholder="Décrivez le problème rencontré en détail..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeModal()">Annuler</button>
+        <button class="btn-primary" (click)="saveReclamation()" [disabled]="isSaving">
+          {{ isSaving ? 'Envoi...' : 'Envoyer la réclamation' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

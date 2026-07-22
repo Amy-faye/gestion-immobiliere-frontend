@@ -1,0 +1,152 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu">
+        <li class="active" (click)="navigateTo('/mes-biens')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 21h18" stroke-linecap="round"/>
+              <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Mes biens</span>
+        </li>
+        <li (click)="navigateTo('/rapport-financier')">
+  <span class="menu-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 20V10M18 20V4M6 20v-4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+          <span>Rapport financier</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Mes biens immobiliers</h1>
+          <p class="subtitle">{{ total }} bien(s) vous appartenant</p>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (isLoading) {
+        <div class="loading">Chargement...</div>
+      } @else if (biens.length === 0) {
+        <div class="empty-state">
+          <p>Aucun bien n'est actuellement associé à votre compte.</p>
+        </div>
+      } @else {
+        <div class="biens-grid">
+          @for (bien of biens; track bien.id) {
+            <div class="bien-card" (click)="openDetail(bien)">
+              <div class="bien-photo">
+                @if (bien.photo) {
+                  <img [src]="photoUrl(bien.photo)" [alt]="bien.type" />
+                } @else {
+                  <div class="bien-photo-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" stroke-linejoin="round"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="m21 15-5-5L5 21" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                }
+                <span class="badge" [class]="'badge-' + bien.statut">
+                  {{ statutLabel(bien.statut) }}
+                </span>
+              </div>
+              <div class="bien-info">
+                <h3>{{ bien.type }}</h3>
+                <p class="bien-adresse">{{ bien.adresse }}</p>
+                <p class="bien-loyer">{{ bien.loyer_mensuel | number }} FCFA<span>/mois</span></p>
+                @if (bien.gestionnaire) {
+                  <p class="bien-gestionnaire">Géré par {{ bien.gestionnaire.name }}</p>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (lastPage > 1) {
+          <div class="pagination">
+            <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 1">← Précédent</button>
+            <div class="page-numbers">
+              @for (page of pageNumbers; track page) {
+                <button
+                  class="page-number"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)"
+                >
+                  {{ page }}
+                </button>
+              }
+            </div>
+            <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === lastPage">Suivant →</button>
+          </div>
+        }
+      }
+      @if (selectedBien) {
+        <div class="modal-overlay" (click)="closeDetail()">
+          <div class="modal" (click)="$event.stopPropagation()">
+            <div class="modal-photo">
+              @if (selectedBien.photo) {
+                <img [src]="photoUrl(selectedBien.photo)" [alt]="selectedBien.type" />
+              } @else {
+                <div class="bien-photo-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" stroke-linejoin="round"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="m21 15-5-5L5 21" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              }
+            </div>
+            <div class="modal-body">
+        <span class="badge" [class]="'badge-' + selectedBien.statut">
+          {{ statutLabel(selectedBien.statut) }}
+        </span>
+              <h2>{{ selectedBien.type }}</h2>
+              <p class="modal-adresse">{{ selectedBien.adresse }}</p>
+              <p class="modal-loyer">{{ selectedBien.loyer_mensuel | number }} FCFA<span>/mois</span></p>
+
+              @if (selectedBien.description) {
+                <div class="modal-section">
+                  <h4>Description</h4>
+                  <p>{{ selectedBien.description }}</p>
+                </div>
+              }
+
+              @if (selectedBien.gestionnaire) {
+                <div class="modal-section">
+                  <h4>Gestionnaire</h4>
+                  <p>{{ selectedBien.gestionnaire.name }} — {{ selectedBien.gestionnaire.email }}</p>
+                </div>
+              }
+
+              <button class="btn-close" (click)="closeDetail()">Fermer</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="login-wrapper">
+
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Baobab Immo" class="brand-logo" />
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+  </nav>
+
+  <div class="login-container">
+
+    <div class="login-left">
+      <div class="login-card">
+        <h2>Bon retour parmi nous</h2>
+        <p class="subtitle">Connectez-vous à votre espace</p>
+
+        <div class="form-group">
+          <label>Adresse email</label>
+          <input
+            type="email"
+            [(ngModel)]="email"
+            placeholder="vous@baobabimmo.sn"
+            class="form-input"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input
+            type="password"
+            [(ngModel)]="password"
+            placeholder="••••••••"
+            class="form-input"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-row-between">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="remember" />
+            <span>Se souvenir de moi</span>
+          </label>
+          <a routerLink="/mot-de-passe-oublie" class="link-muted">Mot de passe oublié ?</a>
+        </div>
+
+        @if (errorMessage) {
+          <div class="error-message">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <button
+          class="login-btn"
+          (click)="onLogin()"
+          [disabled]="isLoading"
+        >
+          {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+        </button>
+
+      </div>
+    </div>
+
+    <div class="login-right">
+      <img
+        src="immeuble.jpg"
+        alt="Holding Baobab SA"
+        class="side-image"
+      />
+      <div class="overlay">
+        <p class="quote">
+          Gérez votre patrimoine immobilier en toute sérénité avec Holding Baobab SA
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</div>

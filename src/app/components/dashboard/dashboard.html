@@ -1,0 +1,329 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+        <span class="user-role">{{ roleLabel }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <p class="menu-section-label">Navigation</p>
+      <ul class="menu">
+        @if (user?.role === 'administrateur' || user?.role === 'gestionnaire') {
+          <li (click)="navigateTo('/biens')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 21h18" stroke-linecap="round"/>
+                <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Biens</span>
+          </li>
+          <li (click)="navigateTo('/contrats')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke-linejoin="round"/>
+                <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Contrats</span>
+          </li>
+          <li (click)="navigateTo('/paiements')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+                <path d="M2 10h20" stroke-linecap="round"/>
+                <path d="M6 15h4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Paiements</span>
+          </li>
+          <li (click)="navigateTo('/reclamations')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+                <path d="M12 9v4" stroke-linecap="round"/>
+                <path d="M12 17h.01" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Réclamations</span>
+          </li>
+          <li (click)="navigateTo('/maintenances')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Maintenances</span>
+          </li>
+          <li (click)="navigateTo('/utilisateurs')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke-linecap="round"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Utilisateurs</span>
+          </li>
+        }
+        @if (user?.role === 'locataire') {
+          <li (click)="navigateTo('/mon-contrat')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke-linejoin="round"/>
+                <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Mon contrat</span>
+          </li>
+          <li (click)="navigateTo('/mes-paiements')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+                <path d="M2 10h20" stroke-linecap="round"/>
+                <path d="M6 15h4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Mes paiements</span>
+          </li>
+          <li (click)="navigateTo('/mes-reclamations')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+                <path d="M2 10h20" stroke-linecap="round"/>
+                <path d="M6 15h4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Mes Reclamations</span>
+          </li>
+        }
+        @if (user?.role === 'proprietaire') {
+          <li (click)="navigateTo('/mes-biens')">
+            <span class="menu-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 21h18" stroke-linecap="round"/>
+                <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Mes biens</span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="welcome-block">
+        <h1>Bonjour, {{ user?.name }} 👋</h1>
+        <p class="welcome">Voici un aperçu de votre espace {{ roleLabel | lowercase }}.</p>
+      </div>
+
+      @if (user?.role === 'administrateur' || user?.role === 'gestionnaire') {
+        <div class="stats-grid">
+          <div class="stat-card accent-green" (click)="navigateTo('/biens')">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 21h18" stroke-linecap="round"/>
+                <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3>Biens</h3>
+              <p class="stat-number">{{ isLoading ? '...' : biensCount }}</p>
+              <p class="stat-label">Biens enregistrés</p>
+            </div>
+          </div>
+
+          <div class="stat-card accent-gold" (click)="navigateTo('/contrats')">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke-linejoin="round"/>
+                <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3>Contrats</h3>
+              <p class="stat-number">{{ contratsCount }}</p>
+              <p class="stat-label">Contrats actifs</p>
+            </div>
+          </div>
+
+          <div class="stat-card accent-brown" (click)="navigateTo('/paiements')">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+                <path d="M2 10h20" stroke-linecap="round"/>
+                <path d="M6 15h4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3>Paiements</h3>
+              <p class="stat-number">{{ paiementsCount }}</p>
+              <p class="stat-label">Paiements ce mois</p>
+            </div>
+          </div>
+
+          <div class="stat-card accent-red" (click)="navigateTo('/reclamations')">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+                <path d="M12 9v4" stroke-linecap="round"/>
+                <path d="M12 17h.01" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3>Réclamations</h3>
+              <p class="stat-number">{{ reclamationsCount }}</p>
+              <p class="stat-label">En cours</p>
+            </div>
+          </div>
+
+          <div class="stat-card accent-purple" (click)="navigateTo('/maintenances')">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-info">
+              <h3>Maintenances</h3>
+              <p class="stat-number">{{ maintenancesCount }}</p>
+              <p class="stat-label">En cours</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-widgets">
+          <div class="widget-chart">
+            <h3 class="widget-title">Biens par statut</h3>
+            <div class="bar-chart">
+              @for (item of biensParStatut; track item.statut) {
+                <div class="bar-column">
+                  <div class="bar-value">{{ item.count }}</div>
+                  <div class="bar" [style.height.%]="barHeight(item.count)" [class]="'bar-' + item.statut"></div>
+                  <div class="bar-label">{{ item.label }}</div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="widget-activity">
+            <h3 class="widget-title">Journal d'activité</h3>
+            <div class="activity-list">
+              @for (item of activityItems; track item.date + item.detail) {
+                <div class="activity-item">
+                  <span class="activity-icon">{{ activityIcon(item.type) }}</span>
+                  <div class="activity-text">
+                    <p class="activity-label">{{ item.label }}</p>
+                    <p class="activity-detail">{{ item.detail }}</p>
+                  </div>
+                  <span class="activity-date">{{ item.date | date:'dd/MM' }}</span>
+                </div>
+              } @empty {
+                <p class="activity-empty">Aucune activité récente.</p>
+              }
+            </div>
+          </div>
+        </div>
+
+      } @else if (user?.role === 'locataire') {
+        <div class="role-welcome-grid">
+          <div class="role-welcome-card">
+            <div class="role-welcome-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke-linejoin="round"/>
+                <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h2>Votre contrat de location</h2>
+            <p>Consultez les détails de votre bail : dates, loyer, caution et statut, à tout moment.</p>
+            <button class="role-welcome-btn" (click)="navigateTo('/mon-contrat')">
+              Voir mon contrat
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="role-welcome-card">
+            <div class="role-welcome-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+                <path d="M2 10h20" stroke-linecap="round"/>
+                <path d="M6 15h4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h2>Vos paiements</h2>
+            <p>Retrouvez l'historique complet de vos paiements de loyer et leur statut.</p>
+            <button class="role-welcome-btn" (click)="navigateTo('/mes-paiements')">
+              Voir mes paiements
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="role-welcome-card">
+            <div class="role-welcome-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+                <path d="M12 9v4" stroke-linecap="round"/>
+                <path d="M12 17h.01" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h2>Vos réclamations</h2>
+            <p>Signalez un incident et suivez le traitement de vos réclamations en cours.</p>
+            <button class="role-welcome-btn" (click)="navigateTo('/mes-reclamations')">
+              Voir mes réclamations
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+      @else if (user?.role === 'proprietaire') {
+        <div class="role-welcome-card">
+          <div class="role-welcome-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M3 21h18" stroke-linecap="round"/>
+              <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2>Votre patrimoine immobilier</h2>
+          <p>Suivez l'état et la rentabilité de vos biens en un coup d'œil.</p>
+          <button class="role-welcome-btn" (click)="navigateTo('/mes-biens')">
+            Voir mes biens
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <h2>Rapport financier</h2>
+          <p>Consultez vos revenus, dépenses et le résultat net de votre patrimoine.</p>
+          <button class="role-welcome-btn" (click)="navigateTo('/rapport-financier')">
+            Voir le rapport
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

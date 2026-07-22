@@ -1,0 +1,198 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu">
+        <li class="active" (click)="navigateTo('/mon-contrat')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke-linejoin="round"/>
+              <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mon contrat</span>
+        </li>
+        <li (click)="navigateTo('/mes-paiements')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+              <path d="M2 10h20" stroke-linecap="round"/>
+              <path d="M6 15h4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mes paiements</span>
+        </li>
+        <li (click)="navigateTo('/mes-reclamations')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+              <path d="M12 9v4" stroke-linecap="round"/>
+              <path d="M12 17h.01" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mes réclamations</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Mon contrat de bail</h1>
+          <p class="subtitle">Consultez les détails de votre location</p>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (isLoading) {
+        <div class="loading">Chargement...</div>
+      } @else if (contrats.length === 0) {
+        <div class="empty-state">
+          <p>Aucun contrat n'est actuellement associé à votre compte.</p>
+        </div>
+      } @else {
+        <div class="contrats-list">
+          @for (contrat of contrats; track contrat.id) {
+            <div class="contrat-card">
+              <div class="contrat-card-header">
+                <h3>{{ contrat.bien?.type }} — {{ contrat.bien?.adresse }}</h3>
+                <span class="badge" [class]="'badge-' + contrat.statut">
+                  {{ statutLabel(contrat.statut) }}
+                </span>
+              </div>
+              <div class="contrat-card-body">
+                <div class="info-item">
+                  <span class="info-label">Date de début</span>
+                  <span class="info-value">{{ contrat.date_debut | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Date de fin</span>
+                  <span class="info-value">{{ contrat.date_fin | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Loyer mensuel</span>
+                  <span class="info-value">{{ contrat.loyer_mensuel | number }} FCFA</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Caution</span>
+                  <span class="info-value">{{ contrat.caution | number }} FCFA</span>
+                </div>
+              </div>
+
+              @if (contrat.statut === 'actif') {
+                <button class="btn-pay" (click)="openPayment(contrat)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="5" width="20" height="14" rx="2" stroke-linejoin="round"/>
+                    <path d="M2 10h20" stroke-linecap="round"/>
+                  </svg>
+                  Payer mon loyer
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal de paiement mobile -->
+@if (paymentStep !== 'closed') {
+  <div class="modal-overlay" (click)="paymentStep === 'select' ? closePayment() : null">
+    <div class="payment-modal" (click)="$event.stopPropagation()">
+
+      @if (paymentStep === 'select') {
+        <div class="payment-step">
+          <h2>Payer mon loyer</h2>
+          <p class="payment-amount">{{ paymentContrat?.loyer_mensuel | number }} FCFA</p>
+          <p class="payment-sub">{{ paymentContrat?.bien?.type }} — {{ paymentContrat?.bien?.adresse }}</p>
+
+          <p class="method-label">Choisissez votre moyen de paiement</p>
+          <div class="method-options">
+            <button class="method-btn method-wave" (click)="selectMethod('wave')">
+              <span class="method-icon">W</span>
+              <span>Wave</span>
+            </button>
+            <button class="method-btn method-orange" (click)="selectMethod('orange_money')">
+              <span class="method-icon">O</span>
+              <span>Orange Money</span>
+            </button>
+          </div>
+
+          <button class="btn-cancel" (click)="closePayment()">Annuler</button>
+        </div>
+      }
+
+      @if (paymentStep === 'processing') {
+        <div class="payment-step payment-step-center">
+          <div class="spinner"></div>
+          <p class="processing-text">
+            Connexion à {{ paymentMethod === 'wave' ? 'Wave' : 'Orange Money' }}...
+          </p>
+        </div>
+      }
+
+      @if (paymentStep === 'confirm') {
+        <div class="payment-step payment-step-center">
+          <div class="phone-mockup" [class.phone-wave]="paymentMethod === 'wave'" [class.phone-orange]="paymentMethod === 'orange_money'">
+            <div class="phone-notif-icon">{{ paymentMethod === 'wave' ? 'W' : 'O' }}</div>
+            <p class="phone-notif-title">{{ paymentMethod === 'wave' ? 'Wave' : 'Orange Money' }}</p>
+            <p class="phone-notif-text">
+              Confirmez le paiement de <strong>{{ paymentContrat?.loyer_mensuel | number }} FCFA</strong>
+              vers Holding Baobab SA depuis votre téléphone.
+            </p>
+          </div>
+          <button class="btn-confirm-payment" (click)="confirmPayment()">
+            J'ai confirmé sur mon téléphone
+          </button>
+          <button class="btn-cancel" (click)="closePayment()">Annuler</button>
+        </div>
+      }
+
+      @if (paymentStep === 'success') {
+        <div class="payment-step payment-step-center">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2>Paiement réussi !</h2>
+          <p class="payment-sub">Votre loyer de {{ paymentContrat?.loyer_mensuel | number }} FCFA a été enregistré.</p>
+          <button class="btn-confirm-payment" (click)="closePayment(); navigateTo('/mes-paiements')">
+            Voir ma quittance
+          </button>
+        </div>
+      }
+
+      @if (paymentStep === 'error') {
+        <div class="payment-step payment-step-center">
+          <div class="error-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2>Échec du paiement</h2>
+          <p class="payment-sub">Une erreur est survenue. Veuillez réessayer.</p>
+          <button class="btn-cancel" (click)="closePayment()">Fermer</button>
+        </div>
+      }
+
+    </div>
+  </div>
+}

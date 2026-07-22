@@ -1,0 +1,85 @@
+<div class="accueil-page">
+  <nav class="accueil-nav">
+    <div class="nav-brand">
+      <img src="logo.jpg" alt="Logo Holding Baobab" class="nav-logo" />
+      <span>Baobab <strong>Immo</strong></span>
+    </div>
+    <button class="nav-login-btn" (click)="goToLogin()">Se connecter</button>
+  </nav>
+
+  <section class="hero">
+    <img src="holding.jpg" alt="Holding Baobab SA" class="hero-bg" />
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Holding Baobab SA</p>
+      <h1>Gérez votre patrimoine<br>immobilier en toute <span>sérénité</span></h1>
+      <p class="hero-text">
+        Une plateforme unique pour propriétaires, gestionnaires et locataires :
+        suivez vos biens, vos contrats, vos paiements et vos réclamations en temps réel.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-hero-primary" (click)="goToLogin()">
+          Accéder à mon espace
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="features">
+    <p class="features-eyebrow">Une gestion simplifiée</p>
+    <h2>Tout ce dont vous avez besoin, au même endroit</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 21h18" stroke-linecap="round"/>
+            <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Gestion des biens</h3>
+        <p>Catalogue centralisé de vos biens, avec photos, statuts et historique complet.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+            <path d="M2 10h20" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Paiements simplifiés</h3>
+        <p>Paiement du loyer via Wave ou Orange Money, quittances générées automatiquement.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+            <path d="M12 9v4" stroke-linecap="round"/>
+            <path d="M12 17h.01" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Suivi des réclamations</h3>
+        <p>Signalez un incident et suivez son traitement du signalement à la résolution.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 20V10M18 20V4M6 20v-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Rapports financiers</h3>
+        <p>Visualisez vos revenus et dépenses en un coup d'œil, bien par bien.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="accueil-footer">
+    <p>Holding Baobab SA — Système de Gestion Immobilière</p>
+  </footer>
+</div>

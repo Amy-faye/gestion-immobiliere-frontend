@@ -1,0 +1,46 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <img src="logo.jpg" alt="Logo" class="brand-logo" />
+      <span>Baobab <strong>Immo</strong></span>
+    </div>
+
+    @if (!submitted) {
+      <h1>Mot de passe oublié</h1>
+      <p class="subtitle">Saisissez votre adresse email, nous vous enverrons un lien de réinitialisation.</p>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      <div class="field">
+        <label for="email">Adresse email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="email"
+          placeholder="vous@exemple.com"
+          autocomplete="off"
+        />
+      </div>
+
+      <button class="btn-submit" (click)="onSubmit()" [disabled]="isLoading">
+        {{ isLoading ? 'Envoi en cours...' : 'Envoyer le lien' }}
+      </button>
+
+      <button class="btn-back" (click)="backToLogin()">← Retour à la connexion</button>
+    } @else {
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke-linejoin="round"/>
+          <path d="m22 6-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>Email envoyé</h1>
+      <p class="subtitle">{{ message }}</p>
+      <p class="hint">Vérifiez votre boîte de réception (et vos spams). Le lien expire dans 60 minutes.</p>
+
+      <button class="btn-back" (click)="backToLogin()">← Retour à la connexion</button>
+    }
+  </div>
+</div>

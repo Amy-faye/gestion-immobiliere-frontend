@@ -1,0 +1,118 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu">
+        <li (click)="navigateTo('/mon-contrat')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke-linejoin="round"/>
+              <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mon contrat</span>
+        </li>
+        <li class="active" (click)="navigateTo('/mes-paiements')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+              <path d="M2 10h20" stroke-linecap="round"/>
+              <path d="M6 15h4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Mes paiements</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Mes paiements</h1>
+          <p class="subtitle">Historique de vos paiements de loyer</p>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (isLoading) {
+        <div class="loading">Chargement...</div>
+      } @else if (paiements.length === 0) {
+        <div class="empty-state">
+          <p>Aucun paiement enregistré pour le moment.</p>
+        </div>
+      } @else {
+        <div class="paiements-list">
+          @for (paiement of paiements; track paiement.id) {
+            <div class="paiement-card">
+              <div class="paiement-card-header">
+                <h3>{{ paiement.contrat?.bien?.type }} — {{ paiement.contrat?.bien?.adresse }}</h3>
+                <span class="badge" [class]="'badge-' + paiement.statut">
+                  {{ statutLabel(paiement.statut) }}
+                </span>
+              </div>
+              <div class="paiement-card-body">
+                <div class="info-item">
+                  <span class="info-label">Date de paiement</span>
+                  <span class="info-value">{{ paiement.date_paiement | date:'dd/MM/yyyy' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Montant</span>
+                  <span class="info-value info-value-amount">{{ paiement.montant | number }} FCFA</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Mode de paiement</span>
+                  <span class="info-value">{{ modeLabel(paiement.mode_paiement) }}</span>
+                </div>
+              </div>
+              <div class="paiement-card-body">
+                ...
+              </div>
+              <button class="btn-download" (click)="downloadQuittance(paiement)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 10l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 15V3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Télécharger la quittance
+              </button>
+            </div>
+          }
+        </div>
+
+        @if (lastPage > 1) {
+          <div class="pagination">
+            <button class="page-btn" (click)="previousPage()" [disabled]="currentPage === 1">← Précédent</button>
+            <div class="page-numbers">
+              @for (page of pageNumbers; track page) {
+                <button
+                  class="page-number"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)"
+                >
+                  {{ page }}
+                </button>
+              }
+            </div>
+            <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === lastPage">Suivant →</button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

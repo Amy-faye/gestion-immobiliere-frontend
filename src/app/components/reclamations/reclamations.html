@@ -1,0 +1,231 @@
+<div class="dashboard-wrapper">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="logo.jpg" alt="Logo" class="logo"/>
+      <span class="brand-name">Baobab <strong>Immo</strong></span>
+    </div>
+    <div class="navbar-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.name }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu">
+        <li (click)="navigateTo('/biens')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 21h18" stroke-linecap="round"/>
+              <path d="M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Biens</span>
+        </li>
+        <li (click)="navigateTo('/contrats')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-linejoin="round"/>
+              <path d="M14 2v6h6" stroke-linejoin="round"/>
+              <path d="M9 13h6M9 17h6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Contrats</span>
+        </li>
+        <li (click)="navigateTo('/paiements')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="2" y="6" width="20" height="12" rx="2" stroke-linejoin="round"/>
+              <path d="M2 10h20" stroke-linecap="round"/>
+              <path d="M6 15h4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Paiements</span>
+        </li>
+        <li class="active" (click)="navigateTo('/reclamations')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-linejoin="round"/>
+              <path d="M12 9v4" stroke-linecap="round"/>
+              <path d="M12 17h.01" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Réclamations</span>
+        </li>
+        <li (click)="navigateTo('/maintenances')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Maintenances</span>
+        </li>
+        <li (click)="navigateTo('/utilisateurs')">
+          <span class="menu-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke-linecap="round"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Utilisateurs</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="page-header">
+        <div>
+          <h1>Réclamations</h1>
+          <p class="subtitle">{{ reclamations.length }} réclamation(s) — signalées par les locataires</p>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      @if (isLoading) {
+        <div class="loading">Chargement des réclamations...</div>
+      } @else if (reclamations.length === 0) {
+        <div class="empty-state">
+          <p>Aucune réclamation pour le moment.</p>
+        </div>
+      } @else {
+        <div class="kanban-board">
+          <div class="kanban-column">
+            <div class="kanban-column-header column-ouverte">
+              <span class="column-dot"></span>
+              <h3>Ouvertes</h3>
+              <span class="column-count">{{ ouvertes.length }}</span>
+            </div>
+            <div class="kanban-cards">
+              @for (r of ouvertes; track r.id) {
+                <div class="kanban-card" (click)="openDetail(r)">
+                  <span class="card-type">{{ typeLabel(r.type_incident) }}</span>
+                  <p class="card-bien">{{ r.bien?.type }} — {{ r.bien?.adresse }}</p>
+                  <p class="card-description">{{ r.description }}</p>
+                  <div class="card-footer">
+                    <span class="card-locataire">{{ r.locataire?.name }}</span>
+                    <span class="card-date">{{ r.date_declaration | date:'dd/MM' }}</span>
+                  </div>
+                </div>
+              } @empty {
+                <p class="column-empty">Aucune réclamation ouverte.</p>
+              }
+            </div>
+          </div>
+
+          <div class="kanban-column">
+            <div class="kanban-column-header column-en_cours">
+              <span class="column-dot"></span>
+              <h3>En cours</h3>
+              <span class="column-count">{{ enCours.length }}</span>
+            </div>
+            <div class="kanban-cards">
+              @for (r of enCours; track r.id) {
+                <div class="kanban-card" (click)="openDetail(r)">
+                  <span class="card-type">{{ typeLabel(r.type_incident) }}</span>
+                  <p class="card-bien">{{ r.bien?.type }} — {{ r.bien?.adresse }}</p>
+                  <p class="card-description">{{ r.description }}</p>
+                  <div class="card-footer">
+                    <span class="card-locataire">{{ r.locataire?.name }}</span>
+                    <span class="card-date">{{ r.date_declaration | date:'dd/MM' }}</span>
+                  </div>
+                </div>
+              } @empty {
+                <p class="column-empty">Rien en cours de traitement.</p>
+              }
+            </div>
+          </div>
+
+          <div class="kanban-column">
+            <div class="kanban-column-header column-resolue">
+              <span class="column-dot"></span>
+              <h3>Résolues</h3>
+              <span class="column-count">{{ resolues.length }}</span>
+            </div>
+            <div class="kanban-cards">
+              @for (r of resolues; track r.id) {
+                <div class="kanban-card" (click)="openDetail(r)">
+                  <span class="card-type">{{ typeLabel(r.type_incident) }}</span>
+                  <p class="card-bien">{{ r.bien?.type }} — {{ r.bien?.adresse }}</p>
+                  <p class="card-description">{{ r.description }}</p>
+                  <div class="card-footer">
+                    <span class="card-locataire">{{ r.locataire?.name }}</span>
+                    <span class="card-date">{{ r.date_declaration | date:'dd/MM' }}</span>
+                  </div>
+                </div>
+              } @empty {
+                <p class="column-empty">Aucune réclamation résolue.</p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal de détail -->
+@if (showDetailModal && selectedReclamation) {
+  <div class="modal-overlay" (click)="closeDetail()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-top">
+        <h2>Détail de la réclamation</h2>
+        <button class="icon-btn icon-btn-danger" (click)="deleteReclamation(selectedReclamation)" title="Supprimer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 6h18" stroke-linecap="round"/>
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-label">Bien concerné</span>
+        <p class="detail-value">{{ selectedReclamation.bien?.type }} — {{ selectedReclamation.bien?.adresse }}</p>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-label">Locataire</span>
+        <p class="detail-value">{{ selectedReclamation.locataire?.name }}</p>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-section">
+          <span class="detail-label">Type d'incident</span>
+          <p class="detail-value">{{ typeLabel(selectedReclamation.type_incident) }}</p>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Date de déclaration</span>
+          <p class="detail-value">{{ selectedReclamation.date_declaration | date:'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-label">Description</span>
+        <p class="detail-value detail-description">{{ selectedReclamation.description }}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Mettre à jour le statut</label>
+        <select [(ngModel)]="newStatut">
+          <option value="ouverte">Ouverte</option>
+          <option value="en_cours">En cours</option>
+          <option value="resolue">Résolue</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="closeDetail()">Fermer</button>
+        <button class="btn-primary" (click)="updateStatut()" [disabled]="isSaving">
+          {{ isSaving ? 'Mise à jour...' : 'Mettre à jour le statut' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,55 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <img src="logo.jpg" alt="Logo" class="brand-logo" />
+      <span>Baobab <strong>Immo</strong></span>
+    </div>
+
+    @if (!success) {
+      <h1>Nouveau mot de passe</h1>
+      <p class="subtitle">Choisissez un nouveau mot de passe pour {{ email }}</p>
+
+      @if (errorMessage) {
+        <div class="alert-error">{{ errorMessage }}</div>
+      }
+
+      <div class="field">
+        <label for="password">Nouveau mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          placeholder="6 caractères minimum"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <div class="field">
+        <label for="passwordConfirmation">Confirmer le mot de passe</label>
+        <input
+          id="passwordConfirmation"
+          type="password"
+          [(ngModel)]="passwordConfirmation"
+          placeholder="Retapez le mot de passe"
+          autocomplete="new-password"
+        />
+      </div>
+
+      <button class="btn-submit" (click)="onSubmit()" [disabled]="isLoading">
+        {{ isLoading ? 'Réinitialisation...' : 'Réinitialiser le mot de passe' }}
+      </button>
+
+      <button class="btn-back" (click)="goToLogin()">← Retour à la connexion</button>
+    } @else {
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>Mot de passe modifié</h1>
+      <p class="subtitle">Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>
+
+      <button class="btn-submit" (click)="goToLogin()">Se connecter</button>
+    }
+  </div>
+</div>
