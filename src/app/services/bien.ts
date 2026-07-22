@@ -7,7 +7,7 @@ import { AuthService } from './auth';
   providedIn: 'root',
 })
 export class BienService {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'https://gestion-immobiliere-backend.onrender.com';
 
   constructor(
     private http: HttpClient,

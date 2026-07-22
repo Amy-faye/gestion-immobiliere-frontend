@@ -156,7 +156,7 @@ export class Biens implements OnInit {
   }
 
   photoUrl(path: string): string {
-    return `http://127.0.0.1:8000/storage/${path}`;
+    return `https://gestion-immobiliere-backend.onrender.com/storage/${path}`;
   }
 
   saveBien(): void {
