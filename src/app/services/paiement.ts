@@ -7,8 +7,7 @@ import { AuthService } from './auth';
   providedIn: 'root',
 })
 export class PaiementService {
-  private apiUrl = 'https://gestion-immobiliere-backend.onrender.com';
-
+  private apiUrl = 'https://gestion-immobiliere-backend.onrender.com/api';
   constructor(
     private http: HttpClient,
     private authService: AuthService,
