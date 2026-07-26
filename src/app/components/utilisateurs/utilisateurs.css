@@ -314,6 +314,10 @@
   background: #FBEAE5;
   color: #A8462B;
 }
+.icon-btn-edit:hover {
+  background: #E3E8F1;
+  color: #2c4f7a;
+}
 
 /* Badges par rôle */
 .badge {

@@ -38,6 +38,11 @@ export class UserService {
       headers: this.getHeaders(),
     });
   }
+  updateUser(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/${id}`, data, {
+      headers: this.getHeaders(),
+    });
+  }
 
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/users/${id}`, {

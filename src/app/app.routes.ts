@@ -17,6 +17,7 @@ import { RapportFinancier } from './components/rapport-financier/rapport-financi
 import { Accueil } from './components/accueil/accueil';
 import { MotDePasseOublie } from './components/mot-de-passe-oublie/mot-de-passe-oublie';
 import { ReinitialiserMotDePasse } from './components/reinitialiser-mot-de-passe/reinitialiser-mot-de-passe';
+import { Profil } from './components/profil/profil';
 export const routes: Routes = [
   { path: '', component: Accueil },
   { path: 'login', component: LoginComponent },
@@ -59,7 +60,7 @@ export const routes: Routes = [
     path: 'utilisateurs',
     component: Utilisateurs,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['administrateur', 'gestionnaire'] },
+    data: { roles: ['administrateur'] },
   },
   {
     path: 'mon-contrat',
@@ -90,6 +91,11 @@ export const routes: Routes = [
     component: RapportFinancier,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['proprietaire'] },
+  },
+  {
+    path: 'profil',
+    component: Profil,
+    canActivate: [authGuard],
   },
   { path: 'mot-de-passe-oublie', component: MotDePasseOublie },
   { path: 'reinitialiser-mot-de-passe', component: ReinitialiserMotDePasse },

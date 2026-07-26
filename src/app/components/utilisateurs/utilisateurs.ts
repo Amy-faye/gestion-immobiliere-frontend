@@ -10,6 +10,7 @@ interface UserItem {
   name: string;
   email: string;
   password?: string;
+  telephone?: string;
   role: string;
   created_at?: string;
 }
@@ -31,6 +32,8 @@ export class Utilisateurs implements OnInit {
   filterRole = '';
 
   showModal = false;
+  isEditMode = false;
+  editingId: number | null = null;
   form: UserItem = this.emptyForm();
 
   constructor(
@@ -72,7 +75,22 @@ export class Utilisateurs implements OnInit {
   }
 
   openAddModal(): void {
+    this.isEditMode = false;
+    this.editingId = null;
     this.form = this.emptyForm();
+    this.errorMessage = '';
+    this.showModal = true;
+  }
+
+  openEditModal(item: UserItem): void {
+    this.isEditMode = true;
+    this.editingId = item.id!;
+    this.form = {
+      name: item.name,
+      email: item.email,
+      telephone: item.telephone ?? '',
+      role: item.role,
+    };
     this.errorMessage = '';
     this.showModal = true;
   }
@@ -83,6 +101,11 @@ export class Utilisateurs implements OnInit {
 
   saveUser(): void {
     if (this.isSaving) return;
+
+    if (this.isEditMode) {
+      this.updateExistingUser();
+      return;
+    }
 
     if (!this.form.name || !this.form.email || !this.form.password || !this.form.role) {
       this.errorMessage = 'Merci de remplir tous les champs.';
@@ -111,6 +134,34 @@ export class Utilisateurs implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  private updateExistingUser(): void {
+    if (!this.form.name || !this.form.role) {
+      this.errorMessage = 'Merci de remplir tous les champs.';
+      return;
+    }
+
+    this.isSaving = true;
+
+    this.userService
+      .updateUser(this.editingId!, {
+        name: this.form.name,
+        telephone: this.form.telephone,
+        role: this.form.role,
+      })
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.closeModal();
+          this.loadUsers();
+        },
+        error: () => {
+          this.isSaving = false;
+          this.errorMessage = 'Erreur lors de la modification.';
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   deleteUser(item: UserItem): void {
@@ -158,6 +209,7 @@ export class Utilisateurs implements OnInit {
       name: '',
       email: '',
       password: '',
+      telephone: '',
       role: 'locataire',
     };
   }

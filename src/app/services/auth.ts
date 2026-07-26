@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';import { Observable } from 'rxjs';
 
 export interface CurrentUser {
   id: number;
   name: string;
   email: string;
+  telephone?: string | null;
+  photo?: string | null;
+  photo_url?: string | null;
   role: string;
 }
 
@@ -41,6 +43,19 @@ export class AuthService {
     password_confirmation: string;
   }): Observable<any> {
     return this.http.post(`${this.apiUrl}/reinitialiser-mot-de-passe`, data);
+  }
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`,
+    });
+  }
+
+  getMe(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/me`, { headers: this.getAuthHeaders() });
+  }
+
+  updateProfile(data: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/profil`, data, { headers: this.getAuthHeaders() });
   }
 
   private getStorage(): Storage {

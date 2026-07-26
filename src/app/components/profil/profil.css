@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap');
+
+* { box-sizing: border-box; }
+
+.profil-wrapper {
+  min-height: 100vh;
+  background: #F5EFE3;
+  font-family: 'Work Sans', sans-serif;
+}
+
+.navbar {
+  height: 64px;
+  background: #1B3B2F;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  color: #F5EFE3;
+}
+
+.brand-name strong {
+  color: #C89B3C;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.user-name {
+  color: #F5EFE3;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1.5px solid #C89B3C;
+  color: #C89B3C;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: #C89B3C;
+  color: #1B3B2F;
+}
+
+.profil-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.profil-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(27, 59, 47, 0.06);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.profil-card h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1B3B2F;
+  margin: 0 0 0.25rem;
+}
+
+.subtitle {
+  color: #8C8175;
+  font-size: 0.85rem;
+  margin: 0 0 1.75rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #8C8175;
+}
+
+.alert-error {
+  background: #FBEAE5;
+  color: #8C3A22;
+  border: 1px solid #EFC7B8;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.88rem;
+  margin-bottom: 1.25rem;
+}
+
+.alert-success {
+  background: #E3F1E8;
+  color: #2c7a52;
+  border: 1px solid #b8e0c8;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.88rem;
+  margin-bottom: 1.25rem;
+}
+
+.photo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.photo-preview {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #F5EFE3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #E4DACB;
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-placeholder {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  color: #C89B3C;
+  text-transform: uppercase;
+}
+
+.photo-upload-btn {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #A8462B;
+  cursor: pointer;
+  border: 1px solid #EFC7B8;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  transition: background 0.15s ease;
+}
+
+.photo-upload-btn:hover {
+  background: #FBEAE5;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #24211C;
+  margin-bottom: 0.35rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #E4DACB;
+  border-radius: 8px;
+  font-size: 0.87rem;
+  font-family: inherit;
+  color: #24211C;
+  background: #fff;
+}
+
+.form-group input:disabled {
+  background: #F5EFE3;
+  color: #8C8175;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #A8462B;
+  box-shadow: 0 0 0 3px rgba(168, 70, 43, 0.1);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #F0EAD9;
+  margin: 1.5rem 0;
+}
+
+.section-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6B4226;
+  margin: 0 0 1rem;
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+}
+
+.btn-primary {
+  width: 100%;
+  background: #A8462B;
+  color: #fff;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #8C3A22;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
