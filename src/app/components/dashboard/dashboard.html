@@ -5,13 +5,11 @@
       <span class="brand-name">Baobab <strong>Immo</strong></span>
     </div>
     <div class="navbar-right">
-      <div class="user-info">
+      <div class="user-info" (click)="navigateTo('/profil')" style="cursor: pointer;">
         <span class="user-name">{{ user?.name }}</span>
-        <span class="user-role">{{ roleLabel }}</span>
       </div>
       <button class="logout-btn" (click)="logout()">Déconnexion</button>
-    </div>
-  </nav>
+    </div>  </nav>
 
   <div class="dashboard-container">
     <div class="sidebar">
