@@ -7,6 +7,7 @@ import { ContratService } from '../../services/contrat';
 import { PaiementService } from '../../services/paiement';
 import { ReclamationService } from '../../services/reclamation';
 import { MaintenanceService } from '../../services/maintenance';
+import { UserService } from '../../services/user';
 
 interface ActivityItem {
   type: 'contrat' | 'paiement' | 'reclamation';
@@ -37,6 +38,8 @@ export class Dashboard implements OnInit {
 
   activityItems: ActivityItem[] = [];
 
+  usersCount = 0;
+
   constructor(
     private authService: AuthService,
     private bienService: BienService,
@@ -44,20 +47,36 @@ export class Dashboard implements OnInit {
     private paiementService: PaiementService,
     private reclamationService: ReclamationService,
     private maintenanceService: MaintenanceService,
+    private userService: UserService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.user = this.authService.getUser();
-    this.loadStats();
+
+    if (this.user?.role === 'gestionnaire') {
+      this.loadGestionnaireStats();
+    } else if (this.user?.role === 'administrateur') {
+      this.loadAdminStats();
+    }
   }
 
-  loadStats(): void {
-    if (this.user?.role !== 'administrateur' && this.user?.role !== 'gestionnaire') {
-      return;
-    }
+  loadAdminStats(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (res: any) => {
+        this.usersCount = Array.isArray(res) ? res.length : (res.total ?? 0);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
+  loadGestionnaireStats(): void {
     this.bienService.getBiens(1, 200).subscribe({
       next: (res: any) => {
         const biens = res.data ?? res;
