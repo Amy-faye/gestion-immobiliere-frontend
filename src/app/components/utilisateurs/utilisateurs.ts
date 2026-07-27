@@ -80,6 +80,8 @@ export class Utilisateurs implements OnInit {
     this.form = this.emptyForm();
     this.errorMessage = '';
     this.showModal = true;
+    this.cdr.detectChanges();
+
   }
 
   openEditModal(item: UserItem): void {
@@ -93,10 +95,14 @@ export class Utilisateurs implements OnInit {
     };
     this.errorMessage = '';
     this.showModal = true;
+    this.cdr.detectChanges();
+
   }
 
   closeModal(): void {
     this.showModal = false;
+    this.cdr.detectChanges();
+
   }
 
   saveUser(): void {
