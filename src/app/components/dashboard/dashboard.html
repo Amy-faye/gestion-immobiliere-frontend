@@ -137,8 +137,13 @@
 
     <div class="main-content">
       <div class="welcome-block">
-        <h1>Bonjour, {{ user?.name }} 👋</h1>
-        <p class="welcome">Voici un aperçu de votre espace {{ roleLabel | lowercase }}.</p>
+        @if (user?.role === 'administrateur') {
+          <h1>Tableau de bord Administrateur</h1>
+          <p class="welcome">Supervision générale de la plateforme.</p>
+        } @else {
+          <h1>Bonjour, {{ user?.name }} 👋</h1>
+          <p class="welcome">Voici un aperçu de votre espace {{ roleLabel | lowercase }}.</p>
+        }
       </div>
 
       @if (user?.role === 'gestionnaire') {
@@ -332,45 +337,62 @@
             </svg>
           </button>
         </div>
-      } @else if (user?.role === 'administrateur') {
-        <div class="role-welcome-grid">
-          <div class="role-welcome-card">
-            <div class="role-welcome-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      }  @else if (user?.role === 'administrateur') {
+      <div class="stats-grid">
+        @for (item of usersByRole; track item.role) {
+          <div class="stat-card"
+               [class]="'accent-' + (item.role === 'administrateur' ? 'green' : item.role === 'gestionnaire' ? 'gold' : item.role === 'locataire' ? 'brown' : 'purple')"
+               (click)="navigateTo('/utilisateurs')">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/>
                 <circle cx="9" cy="7" r="4"/>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke-linecap="round"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"/>
               </svg>
             </div>
-            <h2>Comptes utilisateurs</h2>
-            <p>{{ isLoading ? '...' : usersCount }} compte(s) enregistré(s). Créez, modifiez les rôles ou désactivez un accès.</p>
-            <button class="role-welcome-btn" (click)="navigateTo('/utilisateurs')">
-              Gérer les comptes
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+            <div class="stat-info">
+              <h3>{{ item.label }}</h3>
+              <p class="stat-number">{{ isLoading ? '...' : item.count }}</p>
+              <p class="stat-label">{{ item.role === 'administrateur' ? 'compte(s) admin' : 'utilisateur(s)' }}</p>
+            </div>
           </div>
+        }
+      </div>
 
-          <div class="role-welcome-card">
-            <div class="role-welcome-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h2>Mon profil</h2>
-            <p>Consultez et mettez à jour vos informations personnelles, photo et mot de passe.</p>
-            <button class="role-welcome-btn" (click)="navigateTo('/profil')">
-              Voir mon profil
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </button>
+      <div class="dashboard-widgets">
+        <div class="widget-chart">
+          <h3 class="widget-title">Comptes par rôle</h3>
+          <div class="role-bar-list">
+            @for (item of usersByRole; track item.role) {
+              <div class="role-bar-row">
+                <span class="role-bar-label">{{ roleIconChar(item.role) }} {{ item.label }}</span>
+                <div class="role-bar-track">
+                  <div class="role-bar-fill" [style.width.%]="roleBarWidth(item.count)" [style.background]="roleColor(item.role)"></div>
+                </div>
+                <span class="role-bar-count">{{ item.count }}</span>
+              </div>
+            }
           </div>
         </div>
-      }
+
+        <div class="widget-activity">
+          <h3 class="widget-title">Derniers comptes créés</h3>
+          <div class="activity-list">
+            @for (item of recentUsers; track item.id) {
+              <div class="activity-item">
+                <span class="activity-icon">{{ roleIconChar(item.role) }}</span>
+                <div class="activity-text">
+                  <p class="activity-label">{{ item.name }}</p>
+                  <p class="activity-detail">{{ item.email }}</p>
+                </div>
+                <span class="activity-date">{{ item.created_at | date:'dd/MM' }}</span>
+              </div>
+            } @empty {
+              <p class="activity-empty">Aucun compte pour le moment.</p>
+            }
+          </div>
+        </div>
+      </div>
+    }
     </div>
   </div>
 </div>

@@ -39,6 +39,9 @@ export class Dashboard implements OnInit {
   activityItems: ActivityItem[] = [];
 
   usersCount = 0;
+  usersByRole: { role: string; label: string; count: number }[] = [];
+  maxRoleCount = 1;
+  recentUsers: any[] = [];
 
   constructor(
     private authService: AuthService,
@@ -65,7 +68,14 @@ export class Dashboard implements OnInit {
   loadAdminStats(): void {
     this.userService.getAllUsers().subscribe({
       next: (res: any) => {
-        this.usersCount = Array.isArray(res) ? res.length : (res.total ?? 0);
+        const users = Array.isArray(res) ? res : (res.data ?? []);
+        this.usersCount = users.length;
+        this.computeUsersByRole(users);
+        this.recentUsers = [...users]
+          .sort(
+            (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+          )
+          .slice(0, 5);
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -74,6 +84,38 @@ export class Dashboard implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+
+  private computeUsersByRole(users: any[]): void {
+    const counts: Record<string, number> = {
+      administrateur: 0,
+      gestionnaire: 0,
+      locataire: 0,
+      proprietaire: 0,
+    };
+
+    users.forEach((u) => {
+      if (counts[u.role] !== undefined) {
+        counts[u.role]++;
+      } else {
+        counts[u.role] = 1;
+      }
+    });
+
+    const labels: Record<string, string> = {
+      administrateur: 'Administrateurs',
+      gestionnaire: 'Gestionnaires',
+      locataire: 'Locataires',
+      proprietaire: 'Propriétaires',
+    };
+
+    this.usersByRole = Object.entries(counts).map(([role, count]) => ({
+      role,
+      label: labels[role] ?? role,
+      count,
+    }));
+
+    this.maxRoleCount = Math.max(1, ...this.usersByRole.map((r) => r.count));
   }
 
   loadGestionnaireStats(): void {
@@ -206,6 +248,29 @@ export class Dashboard implements OnInit {
 
   barHeight(count: number): number {
     return Math.max(8, (count / this.maxStatutCount) * 100);
+  }
+  roleBarWidth(count: number): number {
+    return Math.max(6, (count / this.maxRoleCount) * 100);
+  }
+
+  roleColor(role: string): string {
+    const colors: Record<string, string> = {
+      administrateur: '#2c4f7a',
+      gestionnaire: '#6B4226',
+      locataire: '#2c7a52',
+      proprietaire: '#8C5A2B',
+    };
+    return colors[role] ?? '#8C8175';
+  }
+
+  roleIconChar(role: string): string {
+    const icons: Record<string, string> = {
+      administrateur: '🛡️',
+      gestionnaire: '🏢',
+      locataire: '🔑',
+      proprietaire: '📋',
+    };
+    return icons[role] ?? '👤';
   }
 
   activityIcon(type: string): string {
